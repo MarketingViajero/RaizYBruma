@@ -746,7 +746,14 @@
       <li><a href="#colecciones">Colecciones</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
-  </nav>
+    <!-- Cart icon -->
+  <button onclick="toggleCart()" style="background:none;border:none;cursor:pointer;position:relative;padding:.4rem;" aria-label="Carrito">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F47" stroke-width="1.5">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+    </svg>
+    <span id="cart-count" style="display:none;position:absolute;top:0;right:0;background:#C9A96E;color:#2C1A0E;font-size:.6rem;font-family:'Jost',sans-serif;font-weight:600;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;">0</span>
+  </button>
+</nav>
 
   <!-- ── Hero ──────────────────────────────────────── -->
   <section id="inicio">
@@ -1202,8 +1209,42 @@
       <li><a href="#historia">Historia</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
-    <p class="footer-copy">© 2026 Raíz&amp;Bruma. Todos los derechos reservados.</p>
+    <p class="footer-copy">© 2026 Raíz&amp;Bruma. Todos los derechos reservados. <a href="#" id="adminLink" style="color:rgba(245,230,200,.25);font-size:.7rem;text-decoration:none;margin-left:8px;transition:color .3s;" onmouseover="this.style.color='rgba(245,230,200,.55)'" onmouseout="this.style.color='rgba(245,230,200,.25)'">Admin</a></p>
   </footer>
+
+  <!-- ── Login Modal ──────────────────────────────────── -->
+  <div id="loginOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,10,4,.72);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:20px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 24px 80px rgba(20,10,4,.4);">
+      <div style="background:#2D1B0E;padding:28px 28px 22px;text-align:center;position:relative;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;letter-spacing:.18em;color:#F5E6C8;">RAÍZ<span style="color:#C8922A;">&</span>BRUMA</div>
+        <div style="font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,146,42,.7);margin-top:4px;">Acceso Administrador</div>
+        <button onclick="closeLogin()" style="position:absolute;top:14px;right:16px;background:rgba(255,255,255,.12);border:none;color:#F5E6C8;font-size:1rem;width:28px;height:28px;border-radius:50%;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:26px 28px;">
+        <div id="loginError" style="display:none;background:#FFF0EE;border:1px solid #F5C6C2;color:#C0392B;font-size:.78rem;padding:10px 14px;border-radius:9px;margin-bottom:16px;text-align:center;">Usuario o contraseña incorrectos.</div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#8B7355;font-weight:500;display:block;margin-bottom:5px;">Usuario</label>
+          <input id="loginUser" type="text" placeholder="admin" autocomplete="username"
+            style="width:100%;padding:10px 13px;border:1.5px solid rgba(139,115,85,.22);border-radius:9px;font-family:'Jost',sans-serif;font-size:.9rem;outline:none;color:#2D1B0E;"
+            onfocus="this.style.borderColor='#C8922A'" onblur="this.style.borderColor='rgba(139,115,85,.22)'"
+            onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
+        </div>
+        <div style="margin-bottom:22px;">
+          <label style="font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#8B7355;font-weight:500;display:block;margin-bottom:5px;">Contraseña</label>
+          <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password"
+            style="width:100%;padding:10px 13px;border:1.5px solid rgba(139,115,85,.22);border-radius:9px;font-family:'Jost',sans-serif;font-size:.9rem;outline:none;color:#2D1B0E;"
+            onfocus="this.style.borderColor='#C8922A'" onblur="this.style.borderColor='rgba(139,115,85,.22)'"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button onclick="doLogin()" id="loginBtn"
+          style="width:100%;padding:12px;background:#2D1B0E;color:#F5E6C8;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s;"
+          onmouseover="this.style.background='#7B3F00'" onmouseout="this.style.background='#2D1B0E'">
+          Entrar →
+        </button>
+        <p style="font-size:.68rem;color:rgba(139,115,85,.6);text-align:center;margin-top:14px;">Acceso privado · Solo uso interno</p>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Nav scroll effect
@@ -1310,10 +1351,10 @@
             <span id="modal-qty" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#2C1A0E;min-width:24px;text-align:center;">1</span>
             <button onclick="changeQty(1)" style="width:36px;height:36px;border:1px solid #C9A96E;background:none;color:#C9A96E;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
           </div>
-          <button style="width:100%;padding:1rem;background:#2C1A0E;color:#F7F1E8;border:none;font-family:'Jost',sans-serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;" onmouseover="this.style.background='#8B6F47'" onmouseout="this.style.background='#2C1A0E'">
-            Agregar al pedido ☀
+          <button onclick="addToCart()" style="width:100%;padding:1rem;background:#2C1A0E;color:#F7F1E8;border:none;font-family:'Jost',sans-serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;" onmouseover="this.style.background='#8B6F47'" onmouseout="this.style.background='#2C1A0E'">
+            Agregar al carrito ☀
           </button>
-          <p style="font-size:.7rem;color:#B09070;text-align:center;margin-top:.8rem;font-family:'Jost',sans-serif;">Escríbenos por WhatsApp para concretar tu pedido</p>
+          <div id="modal-added-msg" style="display:none;font-size:.75rem;color:#8B6F47;text-align:center;margin-top:.6rem;font-family:'Jost',sans-serif;">✓ Agregado al carrito</div>
         </div>
 
       </div>
@@ -1513,6 +1554,293 @@
     }
     window.addEventListener('resize', adjustModal);
     adjustModal();
+  </script>
+
+  <!-- ── CART DRAWER ─────────────────────────────────────────────── -->
+  <style>
+    #cart-drawer {
+      position: fixed;
+      top: 0; right: -420px;
+      width: min(420px, 100vw);
+      height: 100vh;
+      background: #F7F1E8;
+      z-index: 700;
+      box-shadow: -8px 0 40px rgba(44,26,14,.2);
+      display: flex;
+      flex-direction: column;
+      transition: right .35s cubic-bezier(.4,0,.2,1);
+    }
+    #cart-drawer.open { right: 0; }
+    #cart-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(44,26,14,.5);
+      z-index: 699;
+      backdrop-filter: blur(3px);
+    }
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(201,169,110,.25);
+      align-items: flex-start;
+    }
+    .cart-item img { width: 64px; height: 64px; object-fit: cover; flex-shrink: 0; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: #2C1A0E; margin-bottom: .2rem; }
+    .cart-item-price { font-size: .78rem; color: #8B6F47; font-family: 'Jost', sans-serif; }
+    .cart-item-qty { display: flex; align-items: center; gap: .5rem; margin-top: .5rem; }
+    .cart-item-qty button { width: 24px; height: 24px; border: 1px solid #C9A96E; background: none; color: #C9A96E; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; }
+    .cart-item-qty span { font-size: .85rem; color: #2C1A0E; min-width: 20px; text-align: center; font-family: 'Jost', sans-serif; }
+    .cart-remove { background: none; border: none; color: #B09070; cursor: pointer; font-size: 1.1rem; padding: .2rem; flex-shrink: 0; }
+    .cart-remove:hover { color: #8B6F47; }
+  </style>
+
+  <div id="cart-overlay" onclick="toggleCart()"></div>
+
+  <div id="cart-drawer">
+    <!-- Header -->
+    <div style="padding:1.5rem 1.5rem 1rem;border-bottom:1px solid rgba(201,169,110,.3);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <div>
+        <div style="font-size:.65rem;font-family:'Jost',sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#C9A96E;margin-bottom:.2rem;">Tu pedido</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#2C1A0E;">Carrito</h3>
+      </div>
+      <button onclick="toggleCart()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#8B6F47;line-height:1;">×</button>
+    </div>
+
+    <!-- Items -->
+    <div id="cart-items" style="flex:1;overflow-y:auto;padding:0 1.5rem;"></div>
+
+    <!-- Empty state -->
+    <div id="cart-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#B09070;gap:1rem;padding:2rem;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#8B6F47;">Tu carrito está vacío</p>
+      <p style="font-size:.78rem;font-family:'Jost',sans-serif;text-align:center;">Explora las colecciones y agrega tus piezas favoritas</p>
+    </div>
+
+    <!-- Footer -->
+    <div id="cart-footer" style="display:none;padding:1.2rem 1.5rem 2rem;border-top:1px solid rgba(201,169,110,.3);flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.5rem;">
+        <span style="font-size:.75rem;font-family:'Jost',sans-serif;color:#8B6F47;letter-spacing:.1em;text-transform:uppercase;">Subtotal</span>
+        <span id="cart-subtotal" style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#2C1A0E;"></span>
+      </div>
+      <p style="font-size:.7rem;color:#B09070;font-family:'Jost',sans-serif;margin-bottom:1.2rem;">Envío calculado al finalizar el pedido</p>
+      <button id="checkout-btn" onclick="goToCheckout()" style="width:100%;padding:1.1rem;background:#2C1A0E;color:#F7F1E8;border:none;font-family:'Jost',sans-serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-bottom:.8rem;" onmouseover="this.style.background='#8B6F47'" onmouseout="this.style.background='#2C1A0E'">
+        Finalizar pedido →
+      </button>
+      <button onclick="toggleCart()" style="width:100%;padding:.8rem;background:none;color:#8B6F47;border:1px solid rgba(201,169,110,.4);font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;">
+        Seguir comprando
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── CART STATE ────────────────────────────────────────────────────────────
+    var cart = [];
+    var currentProduct = null;
+
+    function formatCOP(n) {
+      return '$' + n.toLocaleString('es-CO');
+    }
+
+    function parseCOP(str) {
+      // Returns the lowest price in the range, as integer
+      var clean = str.replace(/[^0-9.]/g, '').replace(/\./g,'');
+      var parts = clean.split('–');
+      return parseInt(parts[0].trim()) || 0;
+    }
+
+    // ── CART DRAWER ───────────────────────────────────────────────────────────
+    function toggleCart() {
+      var drawer = document.getElementById('cart-drawer');
+      var overlay = document.getElementById('cart-overlay');
+      var isOpen = drawer.classList.contains('open');
+      if (isOpen) {
+        drawer.classList.remove('open');
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      } else {
+        closeProduct();
+        renderCart();
+        drawer.classList.add('open');
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function renderCart() {
+      var itemsEl = document.getElementById('cart-items');
+      var emptyEl = document.getElementById('cart-empty');
+      var footerEl = document.getElementById('cart-footer');
+      var countEl = document.getElementById('cart-count');
+
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '';
+        emptyEl.style.display = 'flex';
+        footerEl.style.display = 'none';
+        countEl.style.display = 'none';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+      footerEl.style.display = 'block';
+
+      var total = 0;
+      var count = 0;
+      itemsEl.innerHTML = cart.map(function(item, i) {
+        var lineTotal = item.price * item.qty;
+        total += lineTotal;
+        count += item.qty;
+        return '<div class="cart-item">' +
+          '<img src="' + item.img + '" alt="' + item.name + '" />' +
+          '<div class="cart-item-info">' +
+            '<div class="cart-item-name">' + item.name + '</div>' +
+            '<div class="cart-item-price">' + formatCOP(item.price) + '</div>' +
+            '<div class="cart-item-qty">' +
+              '<button onclick="updateQty(' + i + ',-1)">−</button>' +
+              '<span>' + item.qty + '</span>' +
+              '<button onclick="updateQty(' + i + ',1)">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<button class="cart-remove" onclick="removeItem(' + i + ')">×</button>' +
+        '</div>';
+      }).join('');
+
+      document.getElementById('cart-subtotal').textContent = formatCOP(total);
+      countEl.textContent = count;
+      countEl.style.display = 'flex';
+    }
+
+    function updateQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function removeItem(idx) {
+      cart.splice(idx, 1);
+      renderCart();
+    }
+
+    // ── ADD TO CART (called from modal) ───────────────────────────────────────
+    function addToCart() {
+      if (!currentProduct) return;
+      var p = productData[currentProduct];
+      var img = getProductImg(currentProduct);
+      var priceNum = parseCOP(p.price);
+      var qty = currentQty || 1;
+
+      // Check if already in cart
+      var existing = cart.find(function(i) { return i.key === currentProduct; });
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ key: currentProduct, name: p.name, price: priceNum, qty: qty, img: img });
+      }
+
+      // Show feedback
+      var msg = document.getElementById('modal-added-msg');
+      msg.style.display = 'block';
+      setTimeout(function() { msg.style.display = 'none'; }, 2000);
+
+      renderCart();
+    }
+
+    // ── CHECKOUT ──────────────────────────────────────────────────────────────
+    function goToCheckout() {
+      // Próximamente: integración con MercadoPago
+      // Por ahora muestra un resumen
+      var lines = cart.map(function(i) {
+        return i.qty + 'x ' + i.name + ' (' + formatCOP(i.price * i.qty) + ')';
+      }).join('\n');
+      var total = cart.reduce(function(s,i) { return s + i.price*i.qty; }, 0);
+      alert('Próximamente podrás pagar aquí.\n\nTu pedido:\n' + lines + '\n\nTotal: ' + formatCOP(total));
+    }
+
+    // ── HOOK: save currentProduct when modal opens ────────────────────────────
+    var _origOpenProduct = openProduct;
+    openProduct = function(key) {
+      currentProduct = key;
+      _origOpenProduct(key);
+    };
+  </script>
+
+  <script>
+    // ── Admin Login ──────────────────────────────────────────────────
+    // Credenciales por defecto: usuario=admin  contraseña=raizbruma2026
+    // Para cambiarlas: ejecuta en la consola del navegador:
+    //   setAdminCredentials('nuevo_usuario', 'nueva_contraseña')
+
+    const CRED_KEY = 'ryb_admin_creds';
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    function getStoredCreds() {
+      try { return JSON.parse(localStorage.getItem(CRED_KEY)); } catch(e) { return null; }
+    }
+
+    async function setAdminCredentials(user, pass) {
+      const hash = await sha256(pass);
+      localStorage.setItem(CRED_KEY, JSON.stringify({user, hash}));
+      console.log('✅ Credenciales actualizadas.');
+    }
+    window.setAdminCredentials = setAdminCredentials;
+
+    async function doLogin() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      const btn  = document.getElementById('loginBtn');
+      const err  = document.getElementById('loginError');
+      if (!user || !pass) { err.style.display='block'; err.textContent='Completa ambos campos.'; return; }
+
+      btn.textContent = '...';
+      const hash = await sha256(pass);
+      const stored = getStoredCreds();
+
+      let valid = false;
+      if (stored) {
+        valid = (user === stored.user && hash === stored.hash);
+      } else {
+        // defaults: admin / raizbruma2026
+        const defHash = await sha256('raizbruma2026');
+        valid = (user === 'admin' && hash === defHash);
+      }
+
+      if (valid) {
+        sessionStorage.setItem('ryb_admin_session', 'true');
+        window.location.href = 'dashboard.html';
+      } else {
+        err.style.display = 'block';
+        err.textContent = 'Usuario o contraseña incorrectos.';
+        btn.textContent = 'Entrar →';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+    }
+    window.doLogin = doLogin;
+
+    function openLogin() {
+      const ov = document.getElementById('loginOverlay');
+      ov.style.display = 'flex';
+      setTimeout(() => document.getElementById('loginUser').focus(), 80);
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginBtn').textContent = 'Entrar →';
+    }
+    function closeLogin() {
+      document.getElementById('loginOverlay').style.display = 'none';
+    }
+    window.closeLogin = closeLogin;
+
+    document.getElementById('adminLink').addEventListener('click', e => { e.preventDefault(); openLogin(); });
+    document.getElementById('loginOverlay').addEventListener('click', e => { if(e.target===document.getElementById('loginOverlay')) closeLogin(); });
+    document.addEventListener('keydown', e => { if(e.key==='Escape' && document.getElementById('loginOverlay').style.display==='flex') closeLogin(); });
   </script>
 </body>
 </html>
